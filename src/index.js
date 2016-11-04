@@ -24,18 +24,53 @@ const DEBUG = true;
 const TICK = 1000 / 60;
 
 // TODO: Load this from an external JSON URL for Issue #13
-const map = {
+const greenMap = {
   baseMapSrc: 'mazes/Firefox.png',
   baseMapTilePath: 'mazes/Firefox',
-  pathSrc: 'mazes/Firefox.path.png',
+  pathSrc: 'mazes/Firefox.png',
   solutionSrc: 'mazes/Firefox.green.png',
   passableMin: 67,
   startX: 499, startY: 432,
+  endX: 3258, endY: 433,
+  startArrowButt: [521, 401],
+  startArrowPoint: [509, 418],
+  startArrowLeftWing: [507, 411],
+  startArrowRightWing: [517, 417],
+  endArrowButt: [3259, 420],
+  endArrowPoint: [3262, 399],
+  endArrowLeftWing: [3254,405],
+  endArrowRightWing: [3268, 407],
+  solutionColor: "#0f0",
   width: 4000, height: 4000,
   tileWidth: 512, tileHeight: 512,
   pathData: [],
   solutionData: []
 };
+
+const redMap = {
+  baseMapSrc: 'mazes/Firefox.png',
+  baseMapTilePath: 'mazes/Firefox',
+  pathSrc: 'mazes/Firefox.png',
+  solutionSrc: 'mazes/Firefox.red.png',
+  passableMin: 67,
+  startX: 487, startY: 419,
+  endX: 3228, endY: 427,
+  startArrowButt: [486, 383],
+  startArrowPoint: [487, 407],
+  startArrowLeftWing: [495, 399],
+  startArrowRightWing: [479, 400],
+  endArrowButt: [3219, 419],
+  endArrowPoint: [3203, 406],
+  endArrowLeftWing: [3204,417],
+  endArrowRightWing: [3213, 406],
+  solutionColor: "#f00",
+  width: 4000, height: 4000,
+  tileWidth: 512, tileHeight: 512,
+  pathData: [],
+  solutionData: []
+};
+
+const map = greenMap;
 
 const camera = { x: 0, y: 0, z: 0.75, zmin: 0.75, zmax: 5, zdelay: 0, zdelaymax: 500 };
 const player = {
@@ -53,7 +88,7 @@ const player = {
 };
 const updateTimer = { };
 const drawTimer = { };
-const debugOut = { avg: '', keys: '', gamepad: '', gamepadAxis0: '', gamepadAxis1: '', lars_sez: '' };
+const debugOut = { avg: '', keys: '', gamepad: '', gamepadAxis0: '', gamepadAxis1: '' };
 
 let gui, statsDraw, statsUpdate;
 
@@ -80,8 +115,6 @@ function load() {
     map.pathData = ctx.getImageData(0, 0, map.width, map.height).data;
 
     map.pathImg.removeEventListener('load', loadBaseMapImg);
-
-    player.preferredMap = map.pathImg;
 
     init();
   }
@@ -237,9 +270,6 @@ function draw_a_path(a_path) {
     ctx.globalCompositeOperation = "multiply";
     ctx.beginPath();
     ctx.lineWidth = "8";
-    ctx.lineCap = 'round';
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = '#0f0';
 
     ctx.moveTo(a_path[0][0], a_path[0][1]);
     for (let j = 1; j < a_path.length; j++) {
@@ -250,17 +280,27 @@ function draw_a_path(a_path) {
   }
 }
 
-function log_it(message) {
-    ctx.save();
-    ctx.strokeStyle = '#fff';
-    ctx.fillStyle = '#fff';
-    ctx.textBaseline = 'middle';
-    ctx.textAlign = 'center';
-    ctx.fillText(message, 40, 40);
-    ctx.restore();
-}
-
 function drawUsedPaths(dt) {
+  ctx.save();
+  ctx.lineWidth = "4";
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = map.solutionColor;
+  ctx.beginPath();
+  ctx.moveTo(map.startArrowButt[0], map.startArrowButt[1]);
+  ctx.lineTo(map.startArrowPoint[0], map.startArrowPoint[1]);
+  ctx.lineTo(map.startArrowLeftWing[0], map.startArrowLeftWing[1]);
+  ctx.moveTo(map.startArrowPoint[0], map.startArrowPoint[1]);
+  ctx.lineTo(map.startArrowRightWing[0], map.startArrowRightWing[1]);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(map.endArrowButt[0], map.endArrowButt[1]);
+  ctx.lineTo(map.endArrowPoint[0], map.endArrowPoint[1]);
+  ctx.lineTo(map.endArrowLeftWing[0], map.endArrowLeftWing[1]);
+  ctx.moveTo(map.endArrowPoint[0], map.endArrowPoint[1]);
+  ctx.lineTo(map.endArrowRightWing[0], map.endArrowRightWing[1]);
+  ctx.stroke();
+
   if (player.current_path.length > 1) {
     let [last_x, last_y] = player.current_path[player.current_path.length - 1];
       if (Math.abs(last_x - player.x) > 6 || Math.abs(last_y - player.y) > 6) {
@@ -278,6 +318,8 @@ function drawUsedPaths(dt) {
     player.used_paths.push(player.current_path);
     player.current_path = [[player.x, player.y]];
   }
+
+  ctx.restore();
 }
 
 function drawBreadCrumbs(dt) {
@@ -506,8 +548,6 @@ function suggestBetter(x, y) {
 
   let betterX = Math.trunc((highX - lowX) / 2) + lowX;
   let betterY = Math.trunc((highY - lowY) / 2) + lowY;
-
-  debugOut.lars_sez = betterX.toString() + ": " + Math.trunc(xAxis[betterX][0]).toString() + "  " + betterY.toString() + ": " + Math.trunc(yAxis[betterY][0]).toString();
 
   return [xAxis[betterX][0], yAxis[betterY][0]];
 
