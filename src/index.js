@@ -93,7 +93,33 @@ const redMap = {
   solutionData: []
 };
 
-const possibleGames = [redMap, greenMap];
+const violetMap = {
+  baseMapSrc: greenMap.baseMapSrc,
+  baseMapTilePath: greenMap.baseMapTilePath,
+  pathSrc: greenMap.pathSrc,
+  solutionSrc: 'mazes/Firefox.violet.png',
+  passableMin: greenMap.passableMin,
+  startX: 2797, startY: 214,
+  startHeadingX: 2801, startHeadingY: 212,
+  endX: 2783, endY: 208,
+  endHeadingX: 2782, endHeadingY: 204,
+  startArrowButt: [2826, 201],
+  startArrowPoint: [2810, 208],
+  startArrowLeftWing: [2816, 210],
+  startArrowRightWing: [2813, 202],
+  endArrowButt: [2776, 195],
+  endArrowPoint: [2768, 183],
+  endArrowLeftWing: [2768,190],
+  endArrowRightWing: [2775, 185],
+  solutionColor: "#e0f",
+  width: greenMap.width, height: greenMap.height,
+  tileWidth: greenMap.tileWidth, tileHeight: greenMap.tileHeight,
+  tiles: greenMap.tiles,
+  pathData: greenMap.pathData,
+  solutionData: []
+};
+
+const possibleGames = [redMap, greenMap, violetMap];
 
 var map = possibleGames[getRandomInt(0, possibleGames.length)];
 
