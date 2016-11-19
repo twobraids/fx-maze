@@ -5,13 +5,13 @@
     <title>fx-maze</title>
     <style type="text/css">
       * { margin: 0; padding: 0 }
-      body { margin: 0; background: #000; color: #fff; width: 100%; font-family: sans-serif; }
+      body { margin: 0; background: #000; color: #fff; width: 100% }
       body.loading #loading { display: block; z-index: 100; position: absolute; visibility: hidden }
       h1 { margin-bottom: 1em; }
       p { margin-bottom: 0.5em; }
       #headerImage { width: 100%; }
       #explanation { width: 100%; }
-      #theStartButton { text-align: center; color: aqua; font-size: large; visibility: hidden }
+      #theStartButton { text-align: center; color: aqua; font-size: large; }
       #theResumeButton { text-align: center; color: aqua; font-size: large; visibility: hidden }
       .listItem { font-weight:bold ;}
       .boxed {
@@ -20,12 +20,15 @@
         background-color: snow;
         color: black;
         margin: 1em;
+        font-family: sans-serif;
         text-align: left;
         padding: 1em;
       }
       .intro { text-align: center; }
       .method { border: 1em darkgray solid; width: 80%; padding: 1.5em; margin-bottom: 0.5em; }
       .methods-section { column-count: 2; column-width: 40%; -moz-column-count: 2; -webkit-column-count: 2;}
+      .extra-to-hide { }  /* added because in FF Android & FF iOS hiding the outermost div left the inner
+                             divs still visible.  huh?  */
       canvas { display: block; visibility: hidden; position: absolute }
       #debugContainer {
         display: none;
@@ -41,9 +44,9 @@
   </head>
   <body id="loading">
     <canvas id="viewport"></canvas>
-    <div id="explanation">
-      <img id="headerImage" src="mazes/Firefox.path-forward.png">
-      <div class="intro boxed">
+    <div id="explanation extra-to-hide">
+      <img id="headerImage" class="extra-to-hide" src="mazes/Firefox.path-forward.png">
+      <div class="intro boxed extra-to-hide">
         <h1>We're a globally distributed community</h1>
         <p>A couple times per year, we gather together somewhere on planet to talk, plan and support our mission. </p>
         <p>It's a long flight to the December 2016 goal of the Big Island of Hawaii. We need a way to pass the time as we travel. </p>
@@ -51,7 +54,7 @@
           shape of the Firefox logo. As an image on a screen, however, there was no easy way to solve it.  This year,
           in cahoots with Les Orchard, it's a Web app.</p>
       </div>
-      <div id="theStartButton">START THE GAME</div>
+      <div id="theStartButton" class="extra-to-hide">START THE GAME</div>
       <!-- <div id="theResumeButton">RESUME THE GAME</div> -->
       <div class="howto boxed extra-to-hide">
         <h1>How to Play</h1>
